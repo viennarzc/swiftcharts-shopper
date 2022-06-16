@@ -6,14 +6,99 @@
 //
 
 import SwiftUI
+import Charts
+
+
+func date(year: Int, month: Int, day: Int = 1) -> Date {
+    Calendar.current.date(from: DateComponents(year: year, month: month, day: day)) ?? Date()
+}
 
 struct ContentView: View {
+    @State private var isFormViewShown: Bool = false
+    
+    @State var products: [PurchaseItem] = [
+        .init(name: "Apple Watch", numberOfItems: 1, price: 18000, category: .electronics, dateOfPurchase: Date(timeIntervalSinceNow: -86400)),
+        .init(name: "Uniqlo Pants", numberOfItems: 2, price: 1500, category: .clothing, dateOfPurchase: date(year: 2022, month: 1, day: 15)),
+        .init(name: "Burger", numberOfItems: 3, price: 18000, category: .food, dateOfPurchase: date(year: 2022, month: 4, day: 10)),
+        .init(name: "Apple M1 MacBook Pro", numberOfItems: 1, price: 72000, category: .electronics, dateOfPurchase: date(year: 2022, month: 4, day: 1)),
+        .init(name: "Samsung TV", numberOfItems: 1, price: 14000, category: .appliance, dateOfPurchase: date(year: 2022, month: 2, day: 21)),
+    ]
+    
+    func getTotalPurchaseAmount() -> Double {
+        let prices = products.map { $0.price }
+        let total = prices.reduce(.zero, +)
+        
+        return total
+    }
+    
     var body: some View {
-        VStack {
-            Image(systemName: "globe")
-                .imageScale(.large)
-                .foregroundColor(.accentColor)
-            Text("Hello, world!")
+        NavigationView {
+            ScrollView(.vertical) {
+                VStack(spacing: 16) {
+                    VStack {
+                        HStack {
+                            Text("Total expenses you made is \u{20B1}\(getTotalPurchaseAmount(), specifier: "%.2f")")
+                                .font(.headline)
+                            Spacer()
+                        }
+                        
+                        Chart(products) { item in
+                            BarMark(
+                                x: .value("Price", item.price),
+                                y: .value("Name", item.name)
+                                
+                            ).foregroundStyle(by: .value("Category", item.category.title))
+                            
+                        }
+                        .chartForegroundStyleScale(range: Gradient(colors: [.pink,.purple]))
+                        .frame(height: 300)
+                        
+                    }
+                    .padding()
+                    .background(RoundedRectangle(cornerRadius: 16).fill(Color(.systemGroupedBackground)))
+
+                    
+                    
+                    VStack {
+                        HStack {
+                            Text("Purchases per month")
+                                .font(.headline)
+                            Spacer()
+                        }
+                        
+                        HStack {
+                            Chart(products) { item in
+                                BarMark(
+                                    x: .value("Date", item.dateOfPurchase, unit: .month),
+                                    y: .value("Price", item.numberOfItems))
+                                    
+                            }
+                            
+                        }
+                    }
+                    .padding()
+                    .background(RoundedRectangle(cornerRadius: 16).fill(Color(.systemGroupedBackground)))
+                    .frame(height: 200)
+                    
+                }
+                .padding(16)
+                .toolbar {
+                    ToolbarItem(id: "1") {
+                        Button {
+                            isFormViewShown = true
+                        } label: {
+                            Text("Add Purchase")
+                        }
+
+                    }
+                }
+            }
+        }
+        .sheet(isPresented: $isFormViewShown) {
+            FormView(onTapSave: { product in
+                products.append(product)
+                isFormViewShown = false
+            })
         }
     }
 }

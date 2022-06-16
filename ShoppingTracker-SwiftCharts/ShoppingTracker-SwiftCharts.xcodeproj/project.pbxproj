@@ -11,6 +11,7 @@
 		21EA595F285B425B00E8BC6F /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21EA595E285B425B00E8BC6F /* ContentView.swift */; };
 		21EA5961285B425D00E8BC6F /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 21EA5960285B425D00E8BC6F /* Assets.xcassets */; };
 		21EA5964285B425D00E8BC6F /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 21EA5963285B425D00E8BC6F /* Preview Assets.xcassets */; };
+		21EA596B285B48CA00E8BC6F /* FormView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21EA596A285B48CA00E8BC6F /* FormView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -19,6 +20,7 @@
 		21EA595E285B425B00E8BC6F /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		21EA5960285B425D00E8BC6F /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		21EA5963285B425D00E8BC6F /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
+		21EA596A285B48CA00E8BC6F /* FormView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FormView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -53,6 +55,7 @@
 			children = (
 				21EA595C285B425B00E8BC6F /* ShoppingTracker_SwiftChartsApp.swift */,
 				21EA595E285B425B00E8BC6F /* ContentView.swift */,
+				21EA596A285B48CA00E8BC6F /* FormView.swift */,
 				21EA5960285B425D00E8BC6F /* Assets.xcassets */,
 				21EA5962285B425D00E8BC6F /* Preview Content */,
 			);
@@ -137,6 +140,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				21EA596B285B48CA00E8BC6F /* FormView.swift in Sources */,
 				21EA595F285B425B00E8BC6F /* ContentView.swift in Sources */,
 				21EA595D285B425B00E8BC6F /* ShoppingTracker_SwiftChartsApp.swift in Sources */,
 			);
