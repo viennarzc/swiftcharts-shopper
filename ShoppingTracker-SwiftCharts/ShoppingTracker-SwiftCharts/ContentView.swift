@@ -16,6 +16,7 @@ func date(year: Int, month: Int, day: Int = 1) -> Date {
 struct ContentView: View {
     @State private var isFormViewShown: Bool = false
     @State private var purchaseByCategorySectionValue = 1
+    @State private var purchaseCountDateRange = Calendar.Component.month
     
     @State var products: [PurchaseItem] = [
         .init(name: "Apple Watch", numberOfItems: 1, price: 18000, category: .electronics, dateOfPurchase: Date(timeIntervalSinceNow: -86400)),
@@ -52,6 +53,46 @@ struct ContentView: View {
             
     }
     
+    func getDatePeriodText(from components: Calendar.Component) -> String {
+        switch components {
+            
+        case .era:
+            return "Era"
+        case .year:
+            return "Year"
+        case .month:
+            return "Month"
+        case .day:
+            return "Day"
+        case .hour:
+            return "Hour"
+        case .minute:
+            return "Minue"
+        case .second:
+            return "Second"
+        case .weekday:
+            return "Weekday"
+        case .weekdayOrdinal:
+            return "Week Day Ordinal"
+        case .quarter:
+            return "Quarter"
+        case .weekOfMonth:
+            return "Week of Month"
+        case .weekOfYear:
+            return "Week of Year"
+        case .yearForWeekOfYear:
+            return "Year for Week of Year"
+        case .nanosecond:
+            return "Nanosecond"
+        case .calendar:
+            return "Calendar"
+        case .timeZone:
+            return "Time Zone"
+        @unknown default:
+            return ""
+        }
+    }
+    
     var body: some View {
         NavigationView {
             ScrollView(.vertical) {
@@ -76,7 +117,7 @@ struct ContentView: View {
                         
                     }
                     .padding()
-                    .background(RoundedRectangle(cornerRadius: 16).fill(Color(.systemGroupedBackground)))
+                    .background(RoundedRectangle(cornerRadius: 16).fill(Color(.secondarySystemBackground)))
 
                     
                     
@@ -89,16 +130,27 @@ struct ContentView: View {
                             }
                             
                             HStack {
-                                Text("Purchases on each month ")
+                                Text("Purchases by \(getDatePeriodText(from: purchaseCountDateRange)) ")
                                     .font(.subheadline)
                                 Spacer()
                             }
                         }
                         
+                        Picker("Date Range", selection: $purchaseCountDateRange.animation(.easeInOut)) {
+                            Text("Year")
+                                .tag(Calendar.Component.year)
+                            Text("Quarter")
+                                .tag(Calendar.Component.quarter)
+                            Text("Month")
+                                .tag(Calendar.Component.month)
+                            Text("Weekday")
+                                .tag(Calendar.Component.weekday)
+                        }
+                        .pickerStyle(.segmented)
                         
                         Chart(products) { item in
                             BarMark(
-                                x: .value("Date", item.dateOfPurchase, unit: .month),
+                                x: .value("Date", item.dateOfPurchase, unit: purchaseCountDateRange),
                                 y: .value("Price", item.numberOfItems))
                                 
                         }
@@ -106,8 +158,8 @@ struct ContentView: View {
                         
                     }
                     .padding()
-                    .background(RoundedRectangle(cornerRadius: 16).fill(Color(.systemGroupedBackground)))
-                    .frame(height: 200)
+                    .background(RoundedRectangle(cornerRadius: 16).fill(Color(.secondarySystemBackground)))
+                    .frame(height: 250)
                     
                     
                     VStack {
@@ -137,7 +189,7 @@ struct ContentView: View {
                         .chartForegroundStyleScale(range: Gradient(colors: [.green,.yellow]))
                     }
                     .padding()
-                    .background(RoundedRectangle(cornerRadius: 16).fill(Color(.systemGroupedBackground)))
+                    .background(RoundedRectangle(cornerRadius: 16).fill(Color(.secondarySystemBackground)))
                     .frame(height: 150)
                 }
                 .padding(16)
@@ -152,6 +204,7 @@ struct ContentView: View {
                     }
                 }
             }
+            .background(Color(.systemBackground))
         }
         .sheet(isPresented: $isFormViewShown) {
             FormView(onTapSave: { product in
