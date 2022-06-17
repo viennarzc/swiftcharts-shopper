@@ -61,6 +61,11 @@ struct FormView: View {
                     }
                     .pickerStyle(.menu)
                     
+                    DatePicker(selection: $dateOfPurchase, in: ...Date(), displayedComponents: [.date]) {
+                        Text("Date of Purchase")
+                    }
+                    
+                    
                     TextField("Price", value: $price, formatter: numberFormatter)
                         .keyboardType(.numberPad)
                 }
@@ -76,7 +81,8 @@ struct FormView: View {
                                 name: productName,
                                 numberOfItems: numberOfItems,
                                 price: price,
-                                category: category, dateOfPurchase: Date())
+                                category: category,
+                                dateOfPurchase: dateOfPurchase)
                         )
                         
                     } label: {

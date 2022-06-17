@@ -15,6 +15,7 @@ func date(year: Int, month: Int, day: Int = 1) -> Date {
 
 struct ContentView: View {
     @State private var isFormViewShown: Bool = false
+    @State private var purchaseByCategorySectionValue = 1
     
     @State var products: [PurchaseItem] = [
         .init(name: "Apple Watch", numberOfItems: 1, price: 18000, category: .electronics, dateOfPurchase: Date(timeIntervalSinceNow: -86400)),
@@ -29,6 +30,26 @@ struct ContentView: View {
         let total = prices.reduce(.zero, +)
         
         return total
+    }
+    
+    func getMonthWithMostNumberOfPurchases() -> String {
+        
+        let highest = products.max(by: { (item, item2) -> Bool in
+            return item.numberOfItems < item2.numberOfItems
+            
+        })
+        
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "LLLL"
+        
+        if let item = highest {
+            let monthString = dateFormatter.string(from: item.dateOfPurchase)
+            return monthString
+            
+        }
+
+        return "None"
+            
     }
     
     var body: some View {
@@ -59,27 +80,65 @@ struct ContentView: View {
 
                     
                     
-                    VStack {
-                        HStack {
-                            Text("Purchases per month")
-                                .font(.headline)
-                            Spacer()
-                        }
-                        
-                        HStack {
-                            Chart(products) { item in
-                                BarMark(
-                                    x: .value("Date", item.dateOfPurchase, unit: .month),
-                                    y: .value("Price", item.numberOfItems))
-                                    
+                    VStack(spacing: 8) {
+                        VStack {
+                            HStack {
+                                Text("Most Purchases is on \(getMonthWithMostNumberOfPurchases())")
+                                    .font(.headline)
+                                Spacer()
                             }
                             
+                            HStack {
+                                Text("Purchases on each month ")
+                                    .font(.subheadline)
+                                Spacer()
+                            }
                         }
+                        
+                        
+                        Chart(products) { item in
+                            BarMark(
+                                x: .value("Date", item.dateOfPurchase, unit: .month),
+                                y: .value("Price", item.numberOfItems))
+                                
+                        }
+                            
+                        
                     }
                     .padding()
                     .background(RoundedRectangle(cornerRadius: 16).fill(Color(.systemGroupedBackground)))
                     .frame(height: 200)
                     
+                    
+                    VStack {
+                        HStack {
+                            Text("Purchases by Category")
+                                .font(.headline)
+                            Spacer()
+
+                        }
+                        
+                        
+                        Picker("Purchases by Category", selection: $purchaseByCategorySectionValue.animation(.easeInOut)) {
+                            Text("Item Count")
+                                .tag(1)
+                            Text("Price")
+                                .tag(2)
+                        }
+                        .pickerStyle(.segmented)
+                        
+                        Chart(products) { item in
+                            BarMark(
+                                x: .value("Category", purchaseByCategorySectionValue == 1 ? Double(item.numberOfItems) : item.price))
+                            .foregroundStyle(by: .value("Category", item.category.title))
+                            
+                        }
+                        .chartXAxis(.hidden)
+                        .chartForegroundStyleScale(range: Gradient(colors: [.green,.yellow]))
+                    }
+                    .padding()
+                    .background(RoundedRectangle(cornerRadius: 16).fill(Color(.systemGroupedBackground)))
+                    .frame(height: 150)
                 }
                 .padding(16)
                 .toolbar {
